@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "258947729678",
+    "firebase_url": "https://first-test-849b5.firebaseio.com",
+    "project_id": "first-test-849b5",
+    "storage_bucket": "first-test-849b5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:258947729678:android:68ba6fabb0fb4b3efcaf5f",
+        "android_client_info": {
+          "package_name": "com.fetchimageapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "258947729678-3e5tbkq73jf74nis6k3lcfqcqjp3idvp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcmSBQgao6tmZc9I7AmTmSBkCU7a3P49w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "258947729678-3e5tbkq73jf74nis6k3lcfqcqjp3idvp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
