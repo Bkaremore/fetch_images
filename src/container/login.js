@@ -1,5 +1,13 @@
 import React,{Component} from 'react';
-import {View, Text, TextInput, StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
+import {View,
+    Text,
+    TextInput,
+    StyleSheet,
+    Dimensions,
+    TouchableOpacity,
+    ImageBackground,
+    Image
+} from 'react-native';
 import firebase from 'react-native-firebase';
 import {GoogleSignin} from "react-native-google-signin";
 import NetInfo from "@react-native-community/netinfo";
@@ -16,7 +24,8 @@ class Login extends Component{
             password:'',
             errorEmail:'',
             errorPassword:'',
-            isConnected:true
+            isConnected:false,
+            isPasswordVisible:false
         }
     }
 
@@ -80,33 +89,54 @@ class Login extends Component{
 
 
     render() {
-        let {email, errorEmail, password, errorPassword} = this.state;
+        let {email, errorEmail, password, errorPassword,isPasswordVisible} = this.state;
         return(
-            <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
+            <ImageBackground style={{flex:1, justifyContent:'center', alignItems:'center'}}
+            source={require('../images/background_login.jpg')}
+            >
 
-                <TextInput onChangeText={(text)=>{
-                    this.setState({email:text})
-                }}
-                value={email}
-                style={Styles.inputContainer}
-                placeholder={'Enter email'}/>
+                <Text style={{color:'#fff', fontWeight:'bold', fontSize:32, marginVertical: 20}}>Login</Text>
+                <View style={Styles.inputContainer}>
 
-                <TextInput onChangeText={(text)=>{
-                    this.setState({password:text})
-                }}
-                value={password}
-                style={Styles.inputContainer}
-                placeholder={'Enter password'}/>
+                    <TextInput onChangeText={(text)=>{
+                        this.setState({email:text})
+                    }}
+                               value={email}
+                               style={{fontSize:14}}
+                               placeholder='Email'
+                               keyboardType={'email-address'}
+                    />
+                    <Image source={require('../images/user.png')}
+                           style={Styles.loginIcon}/>
+                </View>
+                {errorEmail !=null? <Text style={{color:'red'}}>{errorEmail}</Text>:null}
 
-                <Text style={{color:'red'}}>{errorPassword}</Text>
+
+                <View style={Styles.inputContainer}>
+                    <TextInput onChangeText={(text)=>{
+                        this.setState({password:text})
+                    }}
+                               value={password}
+                               style={{fontSize:14}}
+                               placeholder={'Password'}
+                               secureTextEntry={!isPasswordVisible ?true:false}/>
+                        <TouchableOpacity onPress={()=>{
+                            this.setState({isPasswordVisible:!isPasswordVisible})
+                        }}>
+
+                            <Image source={!isPasswordVisible ?require('../images/visible.png'):require('../images/hidden.png')}
+                                   style={Styles.loginIcon}/>
+                        </TouchableOpacity>
+                </View>
+                {errorPassword !=null? <Text style={{color:'red'}}>{errorPassword}</Text>:null}
 
                 <TouchableOpacity style={Styles.loginBtn}
                                   onPress={()=>{
                                     this.doLogin()
                                 }}>
-                    <Text>Login</Text>
+                    <Text style={{color:'#fff', fontSize:18, fontWeight:'bold'}}>Login</Text>
                 </TouchableOpacity>
-            </View>
+            </ImageBackground>
         );
     }
 }
@@ -114,18 +144,32 @@ export default Login;
 const Styles = StyleSheet.create({
     inputContainer:{
         borderRadius:5,
-        borderColor:'#000',
+        borderColor:'#fff',
         borderWidth:1,
-        width:"90%",
-        margin:10
+        width:"75%",
+        margin:10,
+        backgroundColor: '#EFFBFB',
+        alignItems: 'center',
+        flexDirection:'row',
+        justifyContent: 'space-between',
+        height:45,
+        padding:3
     },
     loginBtn:{
-        width:'50%',
+        width:'75%',
         justifyContent:'center',
         alignItems:'center',
         height:40,
-        backgroundColor:'blue',
+        backgroundColor:'#0B2161',
         marginVertical:20,
-        borderRadius: 5
+        borderRadius: 5,
+
+    },
+    loginIcon:{
+        height:25,
+        width:25,
+        padding: 5,
+        tintColor:'#01A9DB'
     }
+
 })
