@@ -28,8 +28,6 @@ class HomeScreen extends  Component{
                 this.setState({
                     ImageData:data,
                     loading:false
-                },()=>{
-                    console.log("ImageData ==>",JSON.stringify(this.state.ImageData))
                 })
 
             }

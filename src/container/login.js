@@ -32,7 +32,7 @@ class Login extends Component{
     componentWillMount() {
         NetInfo.fetch().then(state => {
             this.setState({isConnected:state.isConnected})
-            console.log("Is connected?", state.isConnected);
+           // console.log("Is connected?", state.isConnected);
         });
 
     }
