@@ -7,12 +7,14 @@ class HomeScreen extends  Component{
     constructor(props) {
         super(props);
         this.state={
-            ImageData:[]
+            ImageData:[],
+            loading:false
         }
     }
     async UNSAFE_componentWillMount() {
                 let json =[];
                 let data=[];
+                this.setState({loading:true})
                 let response = await fetch('https://pixabay.com/api/?key=16439112-c86ab77c67df6a83a81b71a79&q=yellow+flowers&image_type=photo');
                 json = await response.json();
 
@@ -24,7 +26,8 @@ class HomeScreen extends  Component{
                 }
 
                 this.setState({
-                    ImageData:data
+                    ImageData:data,
+                    loading:false
                 },()=>{
                     console.log("ImageData ==>",JSON.stringify(this.state.ImageData))
                 })
@@ -58,9 +61,16 @@ class HomeScreen extends  Component{
 
 
     render() {
-        let {ImageData} = this.state;
+        let {ImageData,loading} = this.state;
         return(
             <View style={{flex:1}}>
+                <View style={Styles.header}>
+                    <TouchableOpacity onPress={()=>{this.props.navigation.goBack()}}>
+                        <Image source={require('../images/back_arrow.png')}
+                               style={{height:30, width:30, marginHorizontal:15}}/>
+                    </TouchableOpacity>
+                    <Text style={{color:'#fff', paddingHorizontal:8, fontSize: 22, fontWeight: 'bold'}}>Home</Text>
+                </View>
                 <FlatList data={ImageData}
                 extraData={ImageData}
                 keyExtractor={(item)=>{
@@ -72,12 +82,16 @@ class HomeScreen extends  Component{
                 }
                 initialNumToRender={10}/>
 
-                <TouchableOpacity style={Styles.loadMore}
-                                    onPress={()=>{
-                                        this.renderLoadMore()
-                                    }}>
-                    <Text style={Styles.loadMoreTxt}>Load More</Text>
-                </TouchableOpacity>
+                {!loading ? <TouchableOpacity style={Styles.loadMore}
+                                             onPress={()=>{
+                                                 this.renderLoadMore()
+                                             }}>
+                                <Text style={Styles.loadMoreTxt}>Load More</Text>
+                             </TouchableOpacity>
+                    :
+                    <View/>
+                }
+
             </View>
         );
     }
@@ -87,7 +101,7 @@ export default HomeScreen;
 const Styles = StyleSheet.create({
     loadMore:{
         flexDirection:'column',
-        backgroundColor:'#000',
+        backgroundColor:'#0B2161',
         height:40,
         width:'40%',
         margin:10,
@@ -99,5 +113,15 @@ const Styles = StyleSheet.create({
         fontSize:15,
         fontWeight:'bold',
         textAlign:'center'
+    },
+    header:{
+        flexDirection: 'row',
+        backgroundColor:'#0B2161',
+        height:50,
+        width:'100%',
+        alignItems: 'center',
+        //justifyContent: 'space-around',
+        elevation:35,
+        //marginHorizontal:10
     }
 })

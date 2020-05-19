@@ -61,25 +61,17 @@ class Login extends Component{
 
         if(this.state.isConnected){
             try{
-                /*await GoogleSignin.hasPlayServices();
-                console.log("await GoogleSignin.configure() =====>",GoogleSignin.hasPlayServices())
-                const userInfo = await GoogleSignin.signIn();
-                console.log("data =====>",data)
+                console.log("this.state.email ==>",this.state.email)
+                console.log("this.state.password ==>",this.state.password)
 
-                // create a new firebase credential with the token
-                const credential = firebase.auth.GoogleAuthProvider.credential(data.idToken, data.accessToken)
-                // login with credential
-                const firebaseUserCredential = await firebase.auth().signInWithCredential(credential);
-
-                console.log(JSON.stringify(firebaseUserCredential.user.toJSON()));*/
-
-                firebase
-                    .auth()
+                let userAuth = firebase.auth();
+                console.log("userAuth ==>",userAuth)
+                firebase.auth()
                     .createUserWithEmailAndPassword(this.state.email, this.state.password)
-                    .then(() => {
-                        console.log("inside firebase block")
-                        this.props.navigation.navigate('Home')})
-                    .catch(error => console.log("error",error))
+                    .then(response => {
+                        //console.log("inside firebase block==>",response)
+                        this.props.navigation.navigate('Home')}
+                        )
             } catch(e){
                 console.log("error",e)
             }
@@ -102,7 +94,7 @@ class Login extends Component{
                         this.setState({email:text})
                     }}
                                value={email}
-                               style={{fontSize:14}}
+                               style={{fontSize:14,padding:5}}
                                placeholder='Email'
                                keyboardType={'email-address'}
                     />
@@ -117,7 +109,7 @@ class Login extends Component{
                         this.setState({password:text})
                     }}
                                value={password}
-                               style={{fontSize:14}}
+                               style={{fontSize:14,padding:5}}
                                placeholder={'Password'}
                                secureTextEntry={!isPasswordVisible ?true:false}/>
                         <TouchableOpacity onPress={()=>{
@@ -152,8 +144,8 @@ const Styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection:'row',
         justifyContent: 'space-between',
-        height:45,
-        padding:3
+        height:40,
+       // padding:4
     },
     loginBtn:{
         width:'75%',
@@ -162,13 +154,12 @@ const Styles = StyleSheet.create({
         height:40,
         backgroundColor:'#0B2161',
         marginVertical:20,
-        borderRadius: 5,
-
+        borderRadius: 5
     },
     loginIcon:{
         height:25,
         width:25,
-        padding: 5,
+        margin: 8,
         tintColor:'#01A9DB'
     }
 
