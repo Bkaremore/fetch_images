@@ -29,14 +29,12 @@ class Login extends Component{
         }
     }
 
-    componentWillMount() {
+    componentDidMount() {
         NetInfo.fetch().then(state => {
             this.setState({isConnected:state.isConnected})
-           // console.log("Is connected?", state.isConnected);
+            // console.log("Is connected?", state.isConnected);
         });
 
-    }
-    componentDidMount() {
         firebase.auth().onAuthStateChanged(user => {
             console.log("user ==>",user)
             this.props.navigation.navigate(user ? 'Home' : 'Login')
@@ -45,34 +43,38 @@ class Login extends Component{
 
     doLogin = async () =>{
         let allOk = true;
+        let emailVal = /(?!.*\.{2})^([a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+(\.[a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+)*|"((([\t]*\r\n)?[\t]+)?([\x01-\x08\x0b\x0c\x0e-\x1f\x7f\x21\x23-\x5b\x5d-\x7e\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|\\[\x01-\x09\x0b\x0c\x0d-\x7f\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))*(([\t]*\r\n)?[\t]+)?")@(([a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.)+([a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.?$/i;
 
-        if(this.state.email == null && this.state.email == ''){
+        if (emailVal.test(this.state.email) === false) {
             allOk = false
             this.setState({
-                errorEmail:'enter email'
-            })
-        }
-        if(this.state.password == null && this.state.password == ''){
-            allOk = false
-            this.setState({
-                errorPassword:'enter password'
+                errorEmail: 'Enter valid email id.'
             })
         }
 
-        if(this.state.isConnected){
+        if(this.state.password == null || this.state.password == ''){
+            allOk = false
+            this.setState({
+                errorPassword:'Enter password'
+            })
+        }
+
+        if(this.state.email == null && this.state.password == null){
+            allOk = false
+           alert("please enter email and password.")
+        }
+
+        if(allOk && this.state.isConnected){
             try{
-                console.log("this.state.email ==>",this.state.email)
-                console.log("this.state.password ==>",this.state.password)
-
                 let userAuth = firebase.auth();
-                console.log("userAuth ==>",userAuth)
+                //console.log("userAuth ==>",userAuth)
                 firebase.auth()
                     .createUserWithEmailAndPassword(this.state.email, this.state.password)
                     .then(response => {
-                        //console.log("inside firebase block==>",response)
                         this.props.navigation.navigate('Home')}
                         )
             } catch(e){
+                alert(e)
                 console.log("error",e)
             }
 
@@ -97,11 +99,14 @@ class Login extends Component{
                                style={{fontSize:14,padding:5}}
                                placeholder='Email'
                                keyboardType={'email-address'}
+                               onFocus={()=>{
+                                   this.setState({errorEmail:''})
+                               }}
                     />
                     <Image source={require('../images/user.png')}
                            style={Styles.loginIcon}/>
                 </View>
-                {errorEmail !=null? <Text style={{color:'red'}}>{errorEmail}</Text>:null}
+                {errorEmail !=null? <Text style={{color:'#fff'}}>{errorEmail}</Text>:null}
 
 
                 <View style={Styles.inputContainer}>
@@ -111,7 +116,10 @@ class Login extends Component{
                                value={password}
                                style={{fontSize:14,padding:5}}
                                placeholder={'Password'}
-                               secureTextEntry={!isPasswordVisible ?true:false}/>
+                               secureTextEntry={!isPasswordVisible ?true:false}
+                               onFocus={()=>{
+                                   this.setState({errorPassword:''})
+                               }}/>
                         <TouchableOpacity onPress={()=>{
                             this.setState({isPasswordVisible:!isPasswordVisible})
                         }}>
@@ -120,7 +128,7 @@ class Login extends Component{
                                    style={Styles.loginIcon}/>
                         </TouchableOpacity>
                 </View>
-                {errorPassword !=null? <Text style={{color:'red'}}>{errorPassword}</Text>:null}
+                {errorPassword !=null? <Text style={{color:'#fff'}}>{errorPassword}</Text>:null}
 
                 <TouchableOpacity style={Styles.loginBtn}
                                   onPress={()=>{
